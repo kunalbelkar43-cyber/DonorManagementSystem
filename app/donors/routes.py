@@ -1,5 +1,7 @@
 from flask import render_template, redirect, url_for, flash
 from flask_login import login_required
+from flask import request
+from sqlalchemy import or_
 
 from app.extensions import db
 from app.donors import donors
@@ -13,11 +15,34 @@ from app.models.donor_type import DonorType
 @login_required
 def list_donors():
 
-    donor_list = Donor.query.order_by(Donor.id.desc()).all()
+    page = request.args.get("page", 1, type=int)
+
+    search = request.args.get("search", "").strip()
+
+    query = Donor.query
+
+    if search:
+
+        query = query.filter(
+            or_(
+                Donor.donor_code.like(f"%{search}%"),
+                Donor.full_name.like(f"%{search}%"),
+                Donor.mobile.like(f"%{search}%")
+            )
+        )
+
+    donors = query.order_by(
+        Donor.id.desc()
+    ).paginate(
+        page=page,
+        per_page=10,
+        error_out=False
+    )
 
     return render_template(
         "donors/list.html",
-        donors=donor_list
+        donors=donors,
+        search=search
     )
 
 

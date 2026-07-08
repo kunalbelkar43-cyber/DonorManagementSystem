@@ -36,7 +36,7 @@
 
 <tbody>
 
-{% for donor in donors %}
+{% for donor in donors.items %}
 
 <tr>
 
@@ -97,3 +97,125 @@ No donors found.
 </form>
 
 </td>
+<form method="GET" class="row mb-3">
+
+<div class="col-md-6">
+
+<input
+type="text"
+name="search"
+class="form-control"
+placeholder="Search by Name, Mobile or Donor Code"
+value="{{ search }}">
+
+</div>
+
+<div class="col-md-2">
+
+<button
+class="btn btn-primary w-100">
+
+Search
+
+</button>
+
+</div>
+
+<div class="col-md-2">
+
+<a
+href="{{ url_for('donors.list_donors') }}"
+class="btn btn-secondary w-100">
+
+Reset
+
+</a>
+
+</div>
+
+</form>
+<div class="mb-3">
+
+<strong>
+
+Total Donors :
+
+{{ donors.total }}
+
+</strong>
+
+</div>
+<nav>
+
+<ul class="pagination">
+
+{% if donors.has_prev %}
+
+<li class="page-item">
+
+<a
+class="page-link"
+href="{{ url_for('donors.list_donors',
+page=donors.prev_num,
+search=search) }}">
+
+Previous
+
+</a>
+
+</li>
+
+{% endif %}
+
+{% for page_num in donors.iter_pages() %}
+
+{% if page_num %}
+
+<li class="page-item {% if page_num == donors.page %}active{% endif %}">
+
+<a
+class="page-link"
+href="{{ url_for('donors.list_donors',
+page=page_num,
+search=search) }}">
+
+{{ page_num }}
+
+</a>
+
+</li>
+
+{% endif %}
+
+{% endfor %}
+
+{% if donors.has_next %}
+
+<li class="page-item">
+
+<a
+class="page-link"
+href="{{ url_for('donors.list_donors',
+page=donors.next_num,
+search=search) }}">
+
+Next
+
+</a>
+
+</li>
+
+{% endif %}
+
+</ul>
+
+</nav>
+{% if donors.total == 0 %}
+
+<div class="alert alert-warning">
+
+No donor found.
+
+</div>
+
+{% endif %}
