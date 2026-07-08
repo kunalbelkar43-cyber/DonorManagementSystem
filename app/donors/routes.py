@@ -136,3 +136,14 @@ def delete_donor(donor_id):
     flash("Donor deleted successfully.", "success")
 
     return redirect(url_for("donors.list_donors"))
+
+@donors.route("/view/<int:donor_id>")
+@login_required
+def view_donor(donor_id):
+
+    donor = Donor.query.get_or_404(donor_id)
+
+    return render_template(
+        "donors/view.html",
+        donor=donor
+    )

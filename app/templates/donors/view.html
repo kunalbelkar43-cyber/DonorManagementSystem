@@ -1,0 +1,154 @@
+{% extends "base.html" %}
+
+{% block title %}Donor Profile{% endblock %}
+
+{% block content %}
+
+<div class="container mt-4">
+
+<div class="card shadow">
+
+<div class="card-header">
+
+<h3>Donor Profile</h3>
+
+</div>
+
+<div class="card-body">
+
+<table class="table table-bordered">
+
+<tr>
+<th width="30%">Donor Code</th>
+<td>{{ donor.donor_code }}</td>
+</tr>
+
+<tr>
+<th>Full Name</th>
+<td>{{ donor.full_name }}</td>
+</tr>
+
+<tr>
+<th>Mobile</th>
+<td>{{ donor.mobile }}</td>
+</tr>
+
+<tr>
+<th>Email</th>
+<td>{{ donor.email or "-" }}</td>
+</tr>
+
+<tr>
+<th>Address</th>
+<td>{{ donor.address or "-" }}</td>
+</tr>
+
+<tr>
+<th>City</th>
+<td>{{ donor.city or "-" }}</td>
+</tr>
+
+<tr>
+<th>State</th>
+<td>{{ donor.state or "-" }}</td>
+</tr>
+
+<tr>
+<th>Pincode</th>
+<td>{{ donor.pincode or "-" }}</td>
+</tr>
+
+<tr>
+<th>Donor Type</th>
+<td>{{ donor.donor_type.name }}</td>
+</tr>
+
+<tr>
+<th>Status</th>
+<td>
+{% if donor.status %}
+<span class="badge bg-success">Active</span>
+{% else %}
+<span class="badge bg-danger">Inactive</span>
+{% endif %}
+</td>
+</tr>
+
+<tr>
+<th>Created On</th>
+<td>{{ donor.created_at.strftime('%d-%m-%Y') }}</td>
+</tr>
+
+<tr>
+<th>Notes</th>
+<td>{{ donor.notes or "-" }}</td>
+</tr>
+
+</table>
+
+</div>
+
+</div>
+
+</div>
+
+{% endblock %}
+<div class="card mt-3 shadow">
+
+<div class="card-header">
+
+Donation Summary
+
+</div>
+
+<div class="card-body">
+
+<div class="row">
+
+<div class="col-md-4">
+
+<h5>Total Donations</h5>
+
+<h3>0</h3>
+
+</div>
+
+<div class="col-md-4">
+
+<h5>Total Amount</h5>
+
+<h3>₹0</h3>
+
+</div>
+
+<div class="col-md-4">
+
+<h5>Last Donation</h5>
+
+<h3>-</h3>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+<div class="mt-3">
+
+<a href="{{ url_for('donors.list_donors') }}"
+   class="btn btn-secondary">
+
+Back
+
+</a>
+
+<a href="{{ url_for('donors.edit_donor', donor_id=donor.id) }}"
+   class="btn btn-warning">
+
+Edit Donor
+
+</a>
+
+</div>
