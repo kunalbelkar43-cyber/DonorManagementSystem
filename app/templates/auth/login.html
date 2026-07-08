@@ -3,11 +3,30 @@
 <head>
     <title>Login</title>
 </head>
+
 <body>
 
-<h2>Donor Management System</h2>
+<h1>Donor Management System</h1>
 
-<h3>Login Page</h3>
+<form method="POST">
+
+    {{ form.hidden_tag() }}
+
+    <p>
+        {{ form.username.label }}<br>
+        {{ form.username(size=35) }}
+    </p>
+
+    <p>
+        {{ form.password.label }}<br>
+        {{ form.password(size=35) }}
+    </p>
+
+    <p>
+        {{ form.submit() }}
+    </p>
+
+</form>
 
 </body>
 </html>
