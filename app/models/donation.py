@@ -1,12 +1,11 @@
 from app.extensions import db
 
-
 class Donation(db.Model):
     __tablename__ = "donations"
 
     id = db.Column(db.Integer, primary_key=True)
 
-    receipt_no = db.Column(db.String(30), unique=True, nullable=False)
+    receipt_no = db.Column(db.String(20), unique=True, nullable=False)
 
     donor_id = db.Column(
         db.Integer,
@@ -14,9 +13,13 @@ class Donation(db.Model):
         nullable=False
     )
 
-    purpose_id = db.Column(
-        db.Integer,
-        db.ForeignKey("donation_purposes.id"),
+    donation_date = db.Column(
+        db.Date,
+        nullable=False
+    )
+
+    amount = db.Column(
+        db.Numeric(10, 2),
         nullable=False
     )
 
@@ -26,15 +29,28 @@ class Donation(db.Model):
         nullable=False
     )
 
-    amount = db.Column(db.Numeric(10, 2), nullable=False)
+    purpose_id = db.Column(
+        db.Integer,
+        db.ForeignKey("donation_purposes.id"),
+        nullable=False
+    )
 
-    donation_date = db.Column(db.Date, nullable=False)
+    transaction_reference = db.Column(db.String(100))
 
     remarks = db.Column(db.Text)
 
-    created_by = db.Column(
+    received_by = db.Column(
         db.Integer,
-        db.ForeignKey("users.id")
+        db.ForeignKey("users.id"),
+        nullable=False
     )
 
-    created_at = db.Column(db.DateTime, server_default=db.func.now())
+    created_at = db.Column(
+        db.DateTime,
+        server_default=db.func.now()
+    )
+
+    donor = db.relationship("Donor")
+    payment_mode = db.relationship("PaymentMode")
+    purpose = db.relationship("DonationPurpose")
+    receiver = db.relationship("User")

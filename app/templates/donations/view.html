@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+
+{% block title %}Donation Details{% endblock %}
+
+{% block content %}
+
+<div class="container mt-4">
+
+<div class="card shadow">
+
+<div class="card-header bg-success text-white">
+
+<h3>Donation Receipt Preview</h3>
+
+</div>
+
+<div class="card-body">
+
+<table class="table table-bordered">
+
+<tr>
+<th width="30%">Receipt No</th>
+<td>{{ donation.receipt_no }}</td>
+</tr>
+
+<tr>
+<th>Donation Date</th>
+<td>{{ donation.donation_date.strftime('%d-%m-%Y') }}</td>
+</tr>
+
+<tr>
+<th>Donor</th>
+<td>{{ donation.donor.full_name }}</td>
+</tr>
+
+<tr>
+<th>Mobile</th>
+<td>{{ donation.donor.mobile }}</td>
+</tr>
+
+<tr>
+<th>Payment Mode</th>
+<td>{{ donation.payment_mode.name }}</td>
+</tr>
+
+<tr>
+<th>Purpose</th>
+<td>{{ donation.purpose.name }}</td>
+</tr>
+
+<tr>
+<th>Amount</th>
+<td>₹ {{ "%.2f"|format(donation.amount) }}</td>
+</tr>
+
+<tr>
+<th>Received By</th>
+<td>{{ donation.receiver.full_name }}</td>
+</tr>
+
+<tr>
+<th>Remarks</th>
+<td>{{ donation.remarks or "-" }}</td>
+</tr>
+
+</table>
+
+<div class="mt-3">
+
+<a href="{{ url_for('donations.list_donations') }}"
+   class="btn btn-secondary">
+
+Back
+
+</a>
+
+<a href="#"
+   class="btn btn-primary">
+
+Print Receipt
+
+</a>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+{% endblock %}

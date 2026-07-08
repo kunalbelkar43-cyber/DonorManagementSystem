@@ -6,19 +6,81 @@
 
 <div class="container mt-4">
 
-    <div class="d-flex justify-content-between align-items-center mb-3">
-        <h2>Donations</h2>
+<div class="d-flex justify-content-between align-items-center mb-3">
 
-        <a href="{{ url_for('donations.add_donation') }}"
+<h2>Donations</h2>
+
+<a href="{{ url_for('donations.add_donation') }}"
 class="btn btn-success">
-            Record Donation
-        </a>
-    </div>
 
-    <div class="alert alert-info">
-        No donations recorded yet.
-    </div>
+Record Donation
+
+</a>
 
 </div>
 
-{% endblock %}
+{% if donations %}
+
+<table class="table table-bordered table-hover">
+
+<thead>
+
+<tr>
+
+<th>Receipt No</th>
+<th>Date</th>
+<th>Donor</th>
+<th>Amount</th>
+<th>Payment Mode</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+{% for donation in donations %}
+
+<tr>
+
+<td>{{ donation.receipt_no }}</td>
+
+<td>{{ donation.donation_date }}</td>
+
+<td>{{ donation.donor.full_name }}</td>
+
+<td>₹ {{ "%.2f"|format(donation.amount) }}</td>
+
+<td>{{ donation.payment_mode.name }}</td>
+
+</tr>
+
+{% endfor %}
+
+</tbody>
+
+</table>
+
+{% else %}
+
+<div class="alert alert-info">
+
+No donations recorded.
+
+</div>
+
+{% endif %}
+
+</div>
+<th>Actions</th>
+<td>
+
+<a href="{{ url_for('donations.view_donation',
+donation_id=donation.id) }}"
+class="btn btn-info btn-sm">
+
+View
+
+</a>
+
+</td>

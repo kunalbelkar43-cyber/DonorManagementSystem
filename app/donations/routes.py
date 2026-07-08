@@ -15,6 +15,7 @@ from flask_login import (
 from app.extensions import db
 from app.donations import donations
 from app.donations.forms import DonationForm
+from app.donations.utils import generate_receipt_number
 
 from app.models.donor import Donor
 from app.models.payment_mode import PaymentMode
@@ -46,19 +47,58 @@ def add_donation():
     ]
 
     if form.validate_on_submit():
+        if (
+            form.payment_mode.data
+            and form.payment_mode.data != 1
+            and not form.transaction_reference.data
+        ):
+            form.transaction_reference.errors.append(
+        "Transaction Reference is required for non-cash payments."
+    )
 
-        flash(
-            "Donation form validated successfully.",
-            "success"
-        )
+        donation = Donation(
+        receipt_no=generate_receipt_number(),
+        donor_id=form.donor.data,
+        donation_date=form.donation_date.data,
+        amount=form.amount.data,
+        payment_mode_id=form.payment_mode.data,
+        purpose_id=form.purpose.data,
+        transaction_reference=form.transaction_reference.data,
+        remarks=form.remarks.data,
+        received_by=current_user.id
+    )
 
-        return redirect(
-            url_for("donations.list_donations")
-        )
+    db.session.add(donation)
+    db.session.commit()
 
-    form.donation_date.data = date.today()
+    flash("Donation recorded successfully.", "success")
+
+    return redirect(
+    url_for(
+        "donations.view_donation",
+        donation_id=donation.id
+    )
+)
+
+@donations.route("/")
+@login_required
+def list_donations():
+
+    donations = Donation.query.order_by(
+        Donation.id.desc()
+    ).all()
 
     return render_template(
-        "donations/add.html",
-        form=form
+        "donations/list.html",
+        donations=donations
+    )
+@donations.route("/view/<int:donation_id>")
+@login_required
+def view_donation(donation_id):
+
+    donation = Donation.query.get_or_404(donation_id)
+
+    return render_template(
+        "donations/view.html",
+        donation=donation
     )
