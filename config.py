@@ -10,4 +10,4 @@ class Config:
 
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     
-    print(os.getenv("DATABASE_URL"))
+    
