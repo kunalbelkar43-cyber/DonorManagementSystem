@@ -1,138 +1,110 @@
 {% extends "base.html" %}
 
 {% block title %}
-
 Dashboard
-
 {% endblock %}
 
 {% block content %}
 
-<div class="container-fluid">
-
-<div class="row">
-
-<div class="col-md-2 bg-dark text-white min-vh-100">
-
-<h3 class="mt-3 text-center">
-
-NGO DMS
-
-</h3>
-
-<hr>
-
-<ul class="nav flex-column">
-
-<li class="nav-item">
-
-<a class="nav-link text-white"
-href="{{ url_for('dashboard.index') }}">
-
-Dashboard
-
-</a>
-
-</li>
-
-<li class="nav-item">
-
-<a class="nav-link text-white"
-href="#">
-
-Donors
-
-</a>
-
-</li>
-
-<li class="nav-item">
-
-<a class="nav-link text-white"
-href="#">
-
-Donations
-
-</a>
-
-</li>
-
-<li class="nav-item">
-
-<a class="nav-link text-white"
-href="#">
-
-Reports
-
-</a>
-
-</li>
-
-<li class="nav-item">
-
-<a class="nav-link text-white"
-href="#">
-
-Users
-
-</a>
-
-</li>
-
-<li class="nav-item">
-
-<a class="nav-link text-danger"
-href="{{ url_for('auth.logout') }}">
-
-Logout
-
-</a>
-
-</li>
-
-</ul>
-
-</div>
-
-<div class="col-md-10">
-
-<nav class="navbar navbar-light bg-white shadow-sm">
-
-<div class="container-fluid">
-
-<h4>
-
-Donor Management System
-
-</h4>
-
-<span>
-
-Welcome,
-
-{{ current_user.full_name }}
-
-</span>
-
-</div>
-
-</nav>
-
 <div class="container mt-4">
 
-<h2>
+<h2>Dashboard</h2>
 
-Dashboard
+<div class="row mt-4">
 
-</h2>
+    <div class="col-md-3">
+        <div class="card text-bg-primary">
+            <div class="card-body">
+                <h5>Total Donors</h5>
+                <h2>{{ total_donors }}</h2>
+            </div>
+        </div>
+    </div>
 
-<p>
+    <div class="col-md-3">
+        <div class="card text-bg-success">
+            <div class="card-body">
+                <h5>Total Donations</h5>
+                <h2>{{ total_donations }}</h2>
+            </div>
+        </div>
+    </div>
 
-Welcome to the NGO Donor Management System.
+    <div class="col-md-3">
+        <div class="card text-bg-warning">
+            <div class="card-body">
+                <h5>Total Amount</h5>
+                <h2>₹ {{ total_amount }}</h2>
+            </div>
+        </div>
+    </div>
 
-</p>
+    <div class="col-md-3">
+        <div class="card text-bg-info">
+            <div class="card-body">
+                <h5>Today's Donations</h5>
+                <h2>{{ today_donations }}</h2>
+            </div>
+        </div>
+    </div>
 
 </div>
+
+<div class="card mt-4">
+
+<div class="card-header">
+
+Recent Donations
+
+</div>
+
+<div class="card-body">
+
+<table class="table table-bordered table-hover">
+
+<thead>
+
+<tr>
+
+<th>Receipt No</th>
+<th>Amount</th>
+<th>Date</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+{% for donation in recent_donations %}
+
+<tr>
+
+<td>{{ donation.receipt_no }}</td>
+
+<td>₹ {{ donation.amount }}</td>
+
+<td>{{ donation.donation_date }}</td>
+
+</tr>
+
+{% else %}
+
+<tr>
+
+<td colspan="3" class="text-center">
+
+No Donations Found
+
+</td>
+
+</tr>
+
+{% endfor %}
+
+</tbody>
+
+</table>
 
 </div>
 

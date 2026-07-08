@@ -16,10 +16,21 @@ class Donor(db.Model):
 
     address = db.Column(db.Text)
 
+    city = db.Column(db.String(100))
+
+    state = db.Column(db.String(100))
+
+    pincode = db.Column(db.String(10))
+
+    notes = db.Column(db.Text)
+
+    created_at = db.Column(db.DateTime, server_default=db.func.now())
+
+    status = db.Column(db.Boolean, default=True)
     donor_type_id = db.Column(
         db.Integer,
         db.ForeignKey("donor_types.id"),
         nullable=False
     )
 
-    created_at = db.Column(db.DateTime, server_default=db.func.now())
+    
