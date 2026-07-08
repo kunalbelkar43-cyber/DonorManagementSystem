@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block title %}Edit Donor{% endblock %}
+
+{% block content %}
+
+<div class="container mt-4">
+
+<h2>Edit Donor</h2>
+
+<form method="POST">
+
+    {{ form.hidden_tag() }}
+
+    <!-- Use the same form fields as add.html -->
+
+    {{ form.submit(class="btn btn-primary", value="Update Donor") }}
+
+</form>
+
+</div>
+
+{% endblock %}
