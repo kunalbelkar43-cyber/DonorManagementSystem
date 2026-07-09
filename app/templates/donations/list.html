@@ -57,21 +57,7 @@ Record Donation
 
 {% endfor %}
 
-</tbody>
 
-</table>
-
-{% else %}
-
-<div class="alert alert-info">
-
-No donations recorded.
-
-</div>
-
-{% endif %}
-
-</div>
 <th>Actions</th>
 <td>
 
@@ -84,3 +70,17 @@ View
 </a>
 
 </td>
+        </tbody>
+    </table>
+
+{% else %}
+
+<div class="alert alert-info">
+    No donations recorded.
+</div>
+
+{% endif %}
+
+</div>
+
+{% endblock %}
