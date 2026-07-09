@@ -8,6 +8,7 @@ from app.auth import auth
 from app.dashboard import dashboard
 from app.donors import donors
 from app.donations import donations
+from app.reports import reports
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -27,6 +28,7 @@ def create_app():
     app.register_blueprint(dashboard)
     app.register_blueprint(donors)
     app.register_blueprint(donations)
+    app.register_blueprint(reports)
     @app.route("/")
     def home():
         return "<h1>Donor Management System</h1>"
