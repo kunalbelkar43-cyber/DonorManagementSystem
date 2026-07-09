@@ -8,10 +8,53 @@
 
     <h2>Donation Reports</h2>
 
-    <div class="alert alert-info">
+    <form method="POST">
 
-        Reports module is under development.
+        {{ form.hidden_tag() }}
 
+        <div class="row">
+
+            <div class="col-md-3">
+                {{ form.from_date.label(class="form-label") }}
+                {{ form.from_date(class="form-control") }}
+            </div>
+
+            <div class="col-md-3">
+                {{ form.to_date.label(class="form-label") }}
+                {{ form.to_date(class="form-control") }}
+            </div>
+
+            <div class="col-md-3">
+                {{ form.donor.label(class="form-label") }}
+                {{ form.donor(class="form-select") }}
+            </div>
+
+            <div class="col-md-3">
+                {{ form.payment_mode.label(class="form-label") }}
+                {{ form.payment_mode(class="form-select") }}
+            </div>
+
+        </div>
+
+        <div class="row mt-3">
+
+            <div class="col-md-3">
+                {{ form.purpose.label(class="form-label") }}
+                {{ form.purpose(class="form-select") }}
+            </div>
+
+            <div class="col-md-3 align-self-end">
+                {{ form.submit(class="btn btn-primary") }}
+            </div>
+
+        </div>
+
+    </form>
+
+    <hr>
+
+    <div class="alert alert-secondary">
+        Select filters and click <strong>Search</strong> to generate the report.
     </div>
 
 </div>
