@@ -6,6 +6,27 @@ from wtforms import (
     SubmitField,
     BooleanField
 )
+from wtforms.fields import DateField
+from wtforms.fields import DateField
+from wtforms.validators import Length, Optional
+
+dob = DateField(
+    "Date of Birth",
+    format="%Y-%m-%d"
+)
+import re
+from wtforms import ValidationError
+
+def validate_pan_number(form, field):
+    if field.data:
+        pan = field.data.upper()
+
+        pattern = r"^[A-Z]{5}[0-9]{4}[A-Z]$"
+
+        if not re.match(pattern, pan):
+            raise ValidationError(
+                "Enter a valid PAN number (Example: ABCDE1234F)."
+            )
 from wtforms.validators import (
     DataRequired,
     Length,
@@ -39,6 +60,18 @@ class DonorForm(FlaskForm):
             Email()
         ]
     )
+    dob = DateField(
+    "Date of Birth",
+    format="%Y-%m-%d",
+    validators=[],
+)
+    pan_number = StringField(
+    "PAN Card Number",
+    validators=[
+        Optional(),
+        Length(min=10, max=10)
+    ]
+)
 
     address = TextAreaField("Address")
 

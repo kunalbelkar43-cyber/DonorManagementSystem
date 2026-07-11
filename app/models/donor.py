@@ -1,4 +1,5 @@
 from app.extensions import db
+from datetime import datetime
 
 
 class Donor(db.Model):
@@ -7,12 +8,18 @@ class Donor(db.Model):
     id = db.Column(db.Integer, primary_key=True)
 
     donor_code = db.Column(db.String(20), unique=True, nullable=False)
+    
+    dob = db.Column(db.Date, nullable=True)
 
     full_name = db.Column(db.String(150), nullable=False)
 
     mobile = db.Column(db.String(15), nullable=False)
 
     email = db.Column(db.String(120))
+
+    dob = db.Column(db.Date, nullable=True)
+
+    pan_number = db.Column(db.String(10), unique=True, nullable=True)
 
     address = db.Column(db.Text)
 
@@ -33,4 +40,15 @@ class Donor(db.Model):
         nullable=False
     )
 
+    donor_type = db.relationship(
+    "DonorType",
+    backref="donors"
+)
+
+donations = db.relationship(
+    "Donation",
+    back_populates="donor",
+    lazy=True,
+    cascade="all, delete-orphan"
+)
     

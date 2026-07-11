@@ -9,6 +9,7 @@ from app.donors.forms import DonorForm
 from app.donors.utils import generate_donor_code
 from app.models.donor import Donor
 from app.models.donor_type import DonorType
+from app.models.donation import Donation
 
 
 @donors.route("/")
@@ -64,6 +65,8 @@ def add_donor():
             full_name=form.full_name.data,
             mobile=form.mobile.data,
             email=form.email.data,
+            dob=form.dob.data,
+            pan_number=form.pan_number.data.upper() if form.pan_number.data else None,
             address=form.address.data,
             city=form.city.data,
             state=form.state.data,
@@ -103,6 +106,12 @@ def edit_donor(donor_id):
         donor.full_name = form.full_name.data
         donor.mobile = form.mobile.data
         donor.email = form.email.data
+        donor.dob = form.dob.data
+        donor.pan_number = (
+            form.pan_number.data.upper()
+            if form.pan_number.data
+            else None
+        )
         donor.address = form.address.data
         donor.city = form.city.data
         donor.state = form.state.data
@@ -143,7 +152,20 @@ def view_donor(donor_id):
 
     donor = Donor.query.get_or_404(donor_id)
 
+    donor_donations = Donation.query.filter_by(
+        donor_id=donor.id
+    ).order_by(Donation.donation_date.desc()).all()
+
+    total_donations = len(donor_donations)
+
+    total_amount = sum(d.amount for d in donor_donations)
+
+    last_donation = donor_donations[0] if donor_donations else None
+
     return render_template(
         "donors/view.html",
-        donor=donor
+        donor=donor,
+        total_donations=total_donations,
+        total_amount=total_amount,
+        last_donation=last_donation
     )

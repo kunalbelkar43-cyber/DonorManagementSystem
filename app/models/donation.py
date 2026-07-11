@@ -50,6 +50,11 @@ class Donation(db.Model):
         server_default=db.func.now()
     )
 
+    donor = db.relationship(
+    "Donor",
+    back_populates="donations"
+)
+
     donor = db.relationship("Donor")
     payment_mode = db.relationship("PaymentMode")
     purpose = db.relationship("DonationPurpose")

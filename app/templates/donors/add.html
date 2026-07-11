@@ -28,6 +28,16 @@
     </div>
 
     <div class="mb-3">
+    {{ form.dob.label(class="form-label") }}
+    {{ form.dob(class="form-control") }}
+</div>
+
+<div class="mb-3">
+    {{ form.pan_number.label(class="form-label") }}
+    {{ form.pan_number(class="form-control", placeholder="ABCDE1234F") }}
+</div>
+
+    <div class="mb-3">
         {{ form.address.label }}
         {{ form.address(class="form-control") }}
     </div>
@@ -61,7 +71,8 @@
         {{ form.status(class="form-check-input") }}
         {{ form.status.label(class="form-check-label") }}
     </div>
-
+    
+    
     {{ form.submit(class="btn btn-primary") }}
 
 </form>
