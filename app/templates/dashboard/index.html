@@ -1,115 +1,426 @@
 {% extends "base.html" %}
 
-{% block title %}
-Dashboard
-{% endblock %}
+{% block title %}Dashboard{% endblock %}
 
 {% block content %}
 
-<div class="container mt-4">
+<div class="container-fluid mt-4">
 
-<h2>Dashboard</h2>
+    <!-- Dashboard Title -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <div>
+            <h2 class="fw-bold">
+                <i class="bi bi-speedometer2"></i>
+                Dashboard
+            </h2>
+
+            <p class="text-muted">
+                Welcome to Shree Laxmikeshav Pratishthan Donation Management System
+            </p>
+        </div>
+
+        <div>
+
+            <a href="{{ url_for('donors.add_donor') }}"
+               class="btn btn-primary">
+
+                <i class="bi bi-person-plus-fill"></i>
+
+                Add Donor
+
+            </a>
+
+            <a href="{{ url_for('donations.add_donation') }}"
+               class="btn btn-success">
+
+                <i class="bi bi-cash-coin"></i>
+
+                Record Donation
+
+            </a>
+
+        </div>
+
+    </div>
+
+    <!-- Statistics Cards -->
+
+    <div class="row">
+
+        <div class="col-lg-3 col-md-6 mb-4">
+
+            <div class="card shadow border-0 bg-primary text-white">
+
+                <div class="card-body">
+
+                    <h6>Total Donors</h6>
+
+                    <h2>{{ total_donors }}</h2>
+
+                    <i class="bi bi-people-fill fs-1 float-end"></i>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="col-lg-3 col-md-6 mb-4">
+
+            <div class="card shadow border-0 bg-success text-white">
+
+                <div class="card-body">
+
+                    <h6>Total Donations</h6>
+
+                    <h2>{{ total_donations }}</h2>
+
+                    <i class="bi bi-cash-stack fs-1 float-end"></i>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="col-lg-3 col-md-6 mb-4">
+
+            <div class="card shadow border-0 bg-warning text-dark">
+
+                <div class="card-body">
+
+                    <h6>Total Amount</h6>
+
+                    <h3>₹ {{ total_amount }}</h3>
+
+                    <i class="bi bi-currency-rupee fs-1 float-end"></i>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="col-lg-3 col-md-6 mb-4">
+
+            <div class="card shadow border-0 bg-danger text-white">
+
+                <div class="card-body">
+
+                    <h6>Today's Donations</h6>
+
+                    <h2>{{ today_donations }}</h2>
+
+                    <i class="bi bi-calendar-check fs-1 float-end"></i>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="row mt-4">
+
+    <!-- Monetary -->
+
+    <div class="col-md-3 mb-3">
+
+        <div class="card text-white bg-success shadow">
+
+            <div class="card-body">
+
+                <h6>Monetary Donations</h6>
+
+                <h2>{{ total_monetary }}</h2>
+
+                <small>Cash + Bank + UPI + Cheque</small>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- In Kind -->
+
+    <div class="col-md-3 mb-3">
+
+        <div class="card text-white bg-info shadow">
+
+            <div class="card-body">
+
+                <h6>In-Kind Donations</h6>
+
+                <h2>{{ total_inkind }}</h2>
+
+                <small>Material Donations</small>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- This Month -->
+
+    <div class="col-md-3 mb-3">
+
+        <div class="card text-dark bg-warning shadow">
+
+            <div class="card-body">
+
+                <h6>This Month</h6>
+
+                <h2>{{ this_month_donations }}</h2>
+
+                <small>Current Month Donations</small>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Average -->
+
+    <div class="col-md-3 mb-3">
+
+        <div class="card text-white bg-secondary shadow">
+
+            <div class="card-body">
+
+                <h6>Average Donation</h6>
+
+                <h2>₹ {{ "%.2f"|format(average_amount) }}</h2>
+
+                <small>Monetary Only</small>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
 
 <div class="row mt-4">
 
-    <div class="col-md-3">
-        <div class="card text-bg-primary">
-            <div class="card-body">
-                <h5>Total Donors</h5>
-                <h2>{{ total_donors }}</h2>
+    <!-- Birthdays -->
+
+    <div class="col-lg-4">
+
+        <div class="card shadow-sm">
+
+            <div class="card-header bg-success text-white">
+
+                🎂 Birthdays Today
+
             </div>
+
+            <div class="card-body">
+
+                {% if birthday_donors %}
+
+                    <ul class="list-group">
+
+                    {% for donor in birthday_donors %}
+
+                        <li class="list-group-item">
+
+                            <strong>{{ donor.full_name }}</strong><br>
+
+                            {{ donor.mobile }}
+
+                        </li>
+
+                    {% endfor %}
+
+                    </ul>
+
+                {% else %}
+
+                    <p class="text-muted">
+
+                        No birthdays today.
+
+                    </p>
+
+                {% endif %}
+
+            </div>
+
         </div>
+
     </div>
 
-    <div class="col-md-3">
-        <div class="card text-bg-success">
-            <div class="card-body">
-                <h5>Total Donations</h5>
-                <h2>{{ total_donations }}</h2>
+    <!-- New Donors -->
+
+    <div class="col-lg-4">
+
+        <div class="card shadow-sm">
+
+            <div class="card-header bg-primary text-white">
+
+                👤 New Donors This Month
+
             </div>
+
+            <div class="card-body">
+
+                {% if new_donors %}
+
+                    <ul class="list-group">
+
+                    {% for donor in new_donors %}
+
+                        <li class="list-group-item">
+
+                            {{ donor.full_name }}
+
+                        </li>
+
+                    {% endfor %}
+
+                    </ul>
+
+                {% else %}
+
+                    <p class="text-muted">
+
+                        No new donors.
+
+                    </p>
+
+                {% endif %}
+
+            </div>
+
         </div>
+
     </div>
 
-    <div class="col-md-3">
-        <div class="card text-bg-warning">
-            <div class="card-body">
-                <h5>Total Amount</h5>
-                <h2>₹ {{ total_amount }}</h2>
-            </div>
+    <!-- Recent Donations -->
+
+    <div class="card shadow">
+
+        <div class="card-header bg-dark text-white">
+
+            <h5 class="mb-0">
+
+                <i class="bi bi-clock-history"></i>
+
+                Recent Donations
+
+            </h5>
+
         </div>
+
+        <div class="card-body">
+
+            {% if recent_donations %}
+
+            <table class="table table-hover table-bordered align-middle">
+
+                <thead class="table-light">
+
+                <tr>
+
+                    <th>Receipt</th>
+
+                    <th>Donor</th>
+
+                    <th>Date</th>
+
+                    <th>Type</th>
+
+                    <th>Amount</th>
+
+                    <th>Payment Mode</th>
+
+                </tr>
+
+                </thead>
+
+                <tbody>
+
+                {% for donation in recent_donations %}
+
+                <tr>
+
+                    <td>{{ donation.receipt_no }}</td>
+
+                    <td>{{ donation.donor.full_name }}</td>
+
+                    <td>{{ donation.donation_date.strftime('%d-%m-%Y') }}</td>
+
+                    <td>
+
+                        {% if donation.donation_type == "MONETARY" %}
+
+                            <span class="badge bg-success">
+
+                                Monetary
+
+                            </span>
+
+                        {% else %}
+
+                            <span class="badge bg-info">
+
+                                In-Kind
+
+                            </span>
+
+                        {% endif %}
+
+                    </td>
+
+                    <td>
+
+                        ₹ {{ donation.amount }}
+
+                    </td>
+
+                    <td>
+
+                        {% if donation.payment_mode %}
+
+                            {{ donation.payment_mode.name }}
+
+                        {% else %}
+
+                            -
+
+                        {% endif %}
+
+                    </td>
+
+                </tr>
+
+                {% endfor %}
+
+                </tbody>
+
+            </table>
+
+            {% else %}
+
+            <div class="alert alert-info">
+
+                No donations available.
+
+            </div>
+
+            {% endif %}
+
+        </div>
+
     </div>
 
-    <div class="col-md-3">
-        <div class="card text-bg-info">
-            <div class="card-body">
-                <h5>Today's Donations</h5>
-                <h2>{{ today_donations }}</h2>
-            </div>
-        </div>
-    </div>
-
 </div>
 
-<div class="card mt-4">
-
-<div class="card-header">
-
-Recent Donations
-
-</div>
-
-<div class="card-body">
-
-<table class="table table-bordered table-hover">
-
-<thead>
-
-<tr>
-
-<th>Receipt No</th>
-<th>Amount</th>
-<th>Date</th>
-
-</tr>
-
-</thead>
-
-<tbody>
-
-{% for donation in recent_donations %}
-
-<tr>
-
-<td>{{ donation.receipt_no }}</td>
-
-<td>₹ {{ donation.amount }}</td>
-
-<td>{{ donation.donation_date }}</td>
-
-</tr>
-
-{% else %}
-
-<tr>
-
-<td colspan="3" class="text-center">
-
-No Donations Found
-
-</td>
-
-</tr>
-
-{% endfor %}
-
-</tbody>
-
-</table>
-
-</div>
-
-</div>
-
-</div>
 
 {% endblock %}

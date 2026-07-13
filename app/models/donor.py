@@ -34,6 +34,14 @@ class Donor(db.Model):
     created_at = db.Column(db.DateTime, server_default=db.func.now())
 
     status = db.Column(db.Boolean, default=True)
+
+    donations = db.relationship(
+    "Donation",
+    back_populates="donor",
+    lazy=True,
+    cascade="all, delete-orphan"
+)
+    
     donor_type_id = db.Column(
         db.Integer,
         db.ForeignKey("donor_types.id"),
@@ -45,10 +53,5 @@ class Donor(db.Model):
     backref="donors"
 )
 
-donations = db.relationship(
-    "Donation",
-    back_populates="donor",
-    lazy=True,
-    cascade="all, delete-orphan"
-)
+
     

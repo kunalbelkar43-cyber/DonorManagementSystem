@@ -2,6 +2,7 @@ from flask import render_template, redirect, url_for, flash
 from flask_login import login_required
 from flask import request
 from sqlalchemy import or_
+from flask import jsonify, request
 
 from app.extensions import db
 from app.donors import donors
@@ -169,3 +170,28 @@ def view_donor(donor_id):
         total_amount=total_amount,
         last_donation=last_donation
     )
+
+@donors.route("/search")
+@login_required
+def search_donors():
+
+    keyword = request.args.get("q", "").strip()
+
+    if not keyword:
+        return jsonify([])
+
+    donors_list = Donor.query.filter(
+        (Donor.full_name.ilike(f"%{keyword}%")) |
+        (Donor.mobile.ilike(f"%{keyword}%")) |
+        (Donor.donor_code.ilike(f"%{keyword}%"))
+    ).order_by(Donor.full_name).limit(10).all()
+
+    return jsonify([
+        {
+            "id": donor.id,
+            "name": donor.full_name,
+            "mobile": donor.mobile,
+            "code": donor.donor_code
+        }
+        for donor in donors_list
+    ])

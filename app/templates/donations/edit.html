@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}Record Donation{% endblock %}
+{% block title %}Edit Donation{% endblock %}
 
 {% block content %}
 
@@ -8,11 +8,13 @@
 
     <div class="card shadow">
 
-        <div class="card-header bg-primary text-white">
+        <div class="card-header bg-warning text-dark">
+
             <h3 class="mb-0">
-                <i class="bi bi-cash-coin"></i>
-                Record Donation
+                <i class="bi bi-pencil-square"></i>
+                Edit Donation
             </h3>
+
         </div>
 
         <div class="card-body">
@@ -21,9 +23,9 @@
 
                 {{ form.hidden_tag() }}
 
-                <!-- =========================== -->
+                <!-- ============================= -->
                 <!-- Basic Information -->
-                <!-- =========================== -->
+                <!-- ============================= -->
 
                 <h5 class="text-primary mb-3">
                     Basic Information
@@ -32,28 +34,9 @@
                 <div class="row">
 
                     <div class="col-md-6 mb-3">
-
-    <label class="form-label">
-        Search Donor
-    </label>
-
-    <input
-        type="text"
-        id="donor-search"
-        class="form-control"
-        placeholder="Search by Name, Mobile or Donor Code">
-
-    <div
-        id="donor-results"
-        class="list-group mt-1 shadow"
-        style="display:none;
-               max-height:250px;
-               overflow-y:auto;">
-    </div>
-
-    {{ form.donor(id="donor-id", style="display:none;") }}
-
-</div>
+                        {{ form.donor.label(class="form-label") }}
+                        {{ form.donor(class="form-select") }}
+                    </div>
 
                     <div class="col-md-6 mb-3">
                         {{ form.donation_date.label(class="form-label") }}
@@ -74,9 +57,9 @@
 
                 <hr>
 
-                <!-- ===================================== -->
+                <!-- ============================= -->
                 <!-- Monetary Donation -->
-                <!-- ===================================== -->
+                <!-- ============================= -->
 
                 <div id="monetary-section">
 
@@ -109,7 +92,7 @@
 
                             <!-- Bank Fields -->
 
-                            <div id="bank-fields" style="display:none;">
+                            <div id="bank-fields">
 
                                 <div class="row">
 
@@ -139,7 +122,7 @@
 
                             <!-- Cheque Fields -->
 
-                            <div id="cheque-fields" style="display:none;">
+                            <div id="cheque-fields">
 
                                 <div class="row">
 
@@ -162,17 +145,13 @@
 
                             </div>
 
-                            <!-- UPI -->
+                            <!-- UPI Fields -->
 
-                            <div id="upi-fields" style="display:none;">
+                            <div id="upi-fields">
 
-                                <div class="row">
-
-                                    <div class="col-md-6 mb-3">
-                                        {{ form.utr_number.label(class="form-label") }}
-                                        {{ form.utr_number(class="form-control") }}
-                                    </div>
-
+                                <div class="mb-3">
+                                    {{ form.utr_number.label(class="form-label") }}
+                                    {{ form.utr_number(class="form-control") }}
                                 </div>
 
                             </div>
@@ -180,6 +159,7 @@
                             <div class="mb-3">
 
                                 {{ form.remarks.label(class="form-label") }}
+
                                 {{ form.remarks(class="form-control", rows="3") }}
 
                             </div>
@@ -190,11 +170,11 @@
 
                 </div>
 
-                <!-- ===================================== -->
+                <!-- ============================= -->
                 <!-- In-Kind Donation -->
-                <!-- ===================================== -->
+                <!-- ============================= -->
 
-                <div id="inkind-section" style="display:none;">
+                <div id="inkind-section">
 
                     <div class="card border-info mb-4">
 
@@ -231,7 +211,7 @@
                                     {{ form.estimated_value(class="form-control") }}
                                 </div>
 
-                                <div class="col-12 mb-3">
+                                <div class="col-md-12 mb-3">
                                     {{ form.remarks.label(class="form-label") }}
                                     {{ form.remarks(class="form-control", rows="3") }}
                                 </div>
@@ -244,18 +224,16 @@
 
                 </div>
 
-                <div class="mt-4">
+                <hr>
 
-                    {{ form.submit(class="btn btn-success") }}
+                {{ form.submit(class="btn btn-warning", value="Update Donation") }}
 
-                    <a href="{{ url_for('donations.list_donations') }}"
-                       class="btn btn-secondary">
+                <a href="{{ url_for('donations.view_donation', donation_id=donation.id) }}"
+                   class="btn btn-secondary">
 
-                        Cancel
+                    Cancel
 
-                    </a>
-
-                </div>
+                </a>
 
             </form>
 
@@ -267,181 +245,68 @@
 
 <script>
 
-document.addEventListener("DOMContentLoaded", function () {
+const donationType = document.getElementById("donation_type");
+const paymentMode = document.getElementById("payment_mode");
 
-    const donationType = document.getElementById("donation_type");
-    const paymentMode = document.getElementById("payment_mode");
+const monetary = document.getElementById("monetary-section");
+const inkind = document.getElementById("inkind-section");
 
-    const monetary = document.getElementById("monetary-section");
-    const inkind = document.getElementById("inkind-section");
+const bank = document.getElementById("bank-fields");
+const cheque = document.getElementById("cheque-fields");
+const upi = document.getElementById("upi-fields");
 
-    const bank = document.getElementById("bank-fields");
-    const cheque = document.getElementById("cheque-fields");
-    const upi = document.getElementById("upi-fields");
+function updateDonation(){
 
-    function updateDonation() {
+    if(donationType.value === "MONETARY"){
 
-        if (donationType.value === "MONETARY") {
+        monetary.style.display = "block";
+        inkind.style.display = "none";
 
-            monetary.style.display = "block";
-            inkind.style.display = "none";
+    }else{
 
-        } else {
-
-            monetary.style.display = "none";
-            inkind.style.display = "block";
-
-        }
+        monetary.style.display = "none";
+        inkind.style.display = "block";
 
     }
 
-    function updatePayment() {
+}
 
-        bank.style.display = "none";
-        cheque.style.display = "none";
-        upi.style.display = "none";
+function updatePayment(){
 
-        let selectedText =
-            paymentMode.options[paymentMode.selectedIndex].text.toLowerCase();
+    bank.style.display = "none";
+    cheque.style.display = "none";
+    upi.style.display = "none";
 
-        if (selectedText.includes("bank")) {
+    if(!paymentMode) return;
 
-            bank.style.display = "block";
+    let text = paymentMode.options[paymentMode.selectedIndex].text.toLowerCase();
 
-        }
+    if(text.includes("bank")){
 
-        else if (selectedText.includes("cheque")) {
+        bank.style.display = "block";
 
-            cheque.style.display = "block";
+    }
+    else if(text.includes("cheque")){
 
-        }
+        cheque.style.display = "block";
 
-        else if (selectedText.includes("upi")) {
+    }
+    else if(text.includes("upi")){
 
-            upi.style.display = "block";
-
-        }
+        upi.style.display = "block";
 
     }
 
-    donationType.addEventListener("change", updateDonation);
+}
+
+updateDonation();
+updatePayment();
+
+donationType.addEventListener("change", updateDonation);
+
+if(paymentMode){
     paymentMode.addEventListener("change", updatePayment);
-
-    updateDonation();
-    updatePayment();
-
-});
-
-</script>
-
-<script>
-
-$(document).ready(function(){
-
-    $("#donor").select2({
-
-        placeholder: "Search Donor",
-
-        allowClear: true,
-
-        width: "100%"
-
-    });
-
-});
-
-</script>
-
-</body>
-
-<script>
-
-const donorSearch = document.getElementById("donor-search");
-const donorResults = document.getElementById("donor-results");
-const donorId = document.getElementById("donor-id");
-
-donorSearch.addEventListener("keyup", function () {
-
-    let keyword = donorSearch.value.trim();
-
-    if (keyword.length < 2) {
-
-        donorResults.style.display = "none";
-        donorResults.innerHTML = "";
-        return;
-
-    }
-
-    fetch("/donors/search?q=" + encodeURIComponent(keyword))
-
-        .then(response => response.json())
-
-        .then(data => {
-
-            donorResults.innerHTML = "";
-
-            if (data.length === 0) {
-
-                donorResults.innerHTML = `
-                    <div class="list-group-item text-muted">
-                        No donor found
-                    </div>
-                `;
-
-                donorResults.style.display = "block";
-                return;
-            }
-
-            data.forEach(function(donor){
-
-                let item = document.createElement("a");
-
-                item.href = "#";
-
-                item.className = "list-group-item list-group-item-action";
-
-                item.innerHTML = `
-                    <strong>${donor.name}</strong><br>
-                    <small>
-                        ${donor.code} |
-                        ${donor.mobile}
-                    </small>
-                `;
-
-                item.onclick = function(e){
-
-                    e.preventDefault();
-
-                    donorSearch.value = donor.name;
-
-                    donorId.value = donor.id;
-
-                    donorResults.style.display = "none";
-
-                };
-
-                donorResults.appendChild(item);
-
-            });
-
-            donorResults.style.display = "block";
-
-        });
-
-});
-
-document.addEventListener("click", function(e){
-
-    if(
-        !donorSearch.contains(e.target) &&
-        !donorResults.contains(e.target)
-    ){
-
-        donorResults.style.display = "none";
-
-    }
-
-});
+}
 
 </script>
 

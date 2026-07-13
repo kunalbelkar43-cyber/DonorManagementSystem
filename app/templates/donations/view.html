@@ -6,94 +6,316 @@
 
 <div class="container mt-4">
 
-<div class="card shadow">
+    <!-- Page Heading -->
+    <div class="d-flex justify-content-between align-items-center mb-3">
 
-<div class="card-header bg-success text-white">
+        <h2>
+            <i class="bi bi-receipt"></i>
+            Donation Details
+        </h2>
 
-<h3>Donation Receipt Preview</h3>
+        <a href="{{ url_for('donations.list_donations') }}"
+           class="btn btn-secondary">
 
-</div>
+            <i class="bi bi-arrow-left"></i>
+            Back
 
-<div class="card-body">
+        </a>
 
-<table class="table table-bordered">
+    </div>
 
-<tr>
-<th width="30%">Receipt No</th>
-<td>{{ donation.receipt_no }}</td>
-</tr>
+    <!-- ============================= -->
+    <!-- Donation Information -->
+    <!-- ============================= -->
 
-<tr>
-<th>Donation Date</th>
-<td>{{ donation.donation_date.strftime('%d-%m-%Y') }}</td>
-</tr>
+    <div class="card shadow mb-4">
 
-<tr>
-<th>Donor</th>
-<td>{{ donation.donor.full_name }}</td>
-</tr>
+        <div class="card-header bg-primary text-white">
 
-<tr>
-<th>Mobile</th>
-<td>{{ donation.donor.mobile }}</td>
-</tr>
+            <h5 class="mb-0">
 
-<tr>
-<th>Payment Mode</th>
-<td>{{ donation.payment_mode.name }}</td>
-</tr>
+                <i class="bi bi-info-circle"></i>
 
-<tr>
-<th>Purpose</th>
-<td>{{ donation.purpose.name }}</td>
-</tr>
+                Donation Information
 
-<tr>
-<th>Amount</th>
-<td>₹ {{ "%.2f"|format(donation.amount) }}</td>
-</tr>
+            </h5>
 
-<tr>
-<th>Received By</th>
-<td>{{ donation.receiver.full_name }}</td>
-</tr>
+        </div>
 
-<tr>
-<th>Remarks</th>
-<td>{{ donation.remarks or "-" }}</td>
-</tr>
+        <div class="card-body">
 
-</table>
+            <table class="table table-bordered">
 
-<div class="mt-3">
+                <tr>
+                    <th width="30%">Receipt Number</th>
+                    <td>{{ donation.receipt_no }}</td>
+                </tr>
 
-<td>
+                <tr>
+                    <th>Donor</th>
+                    <td>{{ donation.donor.full_name }}</td>
+                </tr>
 
-    <a href="{{ url_for('donations.view_donation', donation_id=donation.id) }}"
-       class="btn btn-info btn-sm">
+                <tr>
+                    <th>Donation Date</th>
+                    <td>{{ donation.donation_date.strftime("%d-%m-%Y") }}</td>
+                </tr>
 
-        View
+                <tr>
+                    <th>Donation Type</th>
+                    <td>{{ donation.donation_type }}</td>
+                </tr>
 
-    </a>
+                <tr>
+                    <th>Purpose</th>
+                    <td>{{ donation.purpose.name }}</td>
+                </tr>
 
-</td>
-Back
+            </table>
 
-</a>
+        </div>
 
-<a href="{{ url_for('donations.print_receipt',
-donation_id=donation.id) }}"
-class="btn btn-primary"
-target="_blank">
+    </div>
 
-Print Receipt
 
-</a>
-</div>
+    <!-- ============================= -->
+    <!-- Monetary Donation -->
+    <!-- ============================= -->
 
-</div>
+    {% if donation.donation_type == "MONETARY" %}
 
-</div>
+    <div class="card shadow mb-4">
+
+        <div class="card-header bg-success text-white">
+
+            <h5 class="mb-0">
+
+                <i class="bi bi-cash-stack"></i>
+
+                Monetary Donation Details
+
+            </h5>
+
+        </div>
+
+        <div class="card-body">
+
+            <table class="table table-bordered">
+
+                <tr>
+                    <th width="30%">Amount</th>
+                    <td>₹ {{ "%.2f"|format(donation.amount) }}</td>
+                </tr>
+
+                <tr>
+                    <th>Payment Mode</th>
+                    <td>
+                        {% if donation.payment_mode %}
+                            {{ donation.payment_mode.name }}
+                        {% else %}
+                            -
+                        {% endif %}
+                    </td>
+                </tr>
+
+                {% if donation.bank_name %}
+                <tr>
+                    <th>Bank Name</th>
+                    <td>{{ donation.bank_name }}</td>
+                </tr>
+                {% endif %}
+
+                {% if donation.account_number %}
+                <tr>
+                    <th>Account Number</th>
+                    <td>{{ donation.account_number }}</td>
+                </tr>
+                {% endif %}
+
+                {% if donation.ifsc_code %}
+                <tr>
+                    <th>IFSC Code</th>
+                    <td>{{ donation.ifsc_code }}</td>
+                </tr>
+                {% endif %}
+
+                {% if donation.cheque_number %}
+                <tr>
+                    <th>Cheque Number</th>
+                    <td>{{ donation.cheque_number }}</td>
+                </tr>
+                {% endif %}
+
+                {% if donation.cheque_date %}
+                <tr>
+                    <th>Cheque Date</th>
+                    <td>{{ donation.cheque_date.strftime("%d-%m-%Y") }}</td>
+                </tr>
+                {% endif %}
+
+                {% if donation.utr_number %}
+                <tr>
+                    <th>UPI UTR Number</th>
+                    <td>{{ donation.utr_number }}</td>
+                </tr>
+                {% endif %}
+
+                {% if donation.transaction_reference %}
+                <tr>
+                    <th>Transaction Reference</th>
+                    <td>{{ donation.transaction_reference }}</td>
+                </tr>
+                {% endif %}
+
+            </table>
+
+        </div>
+
+    </div>
+
+    {% endif %}
+
+
+    <!-- ============================= -->
+    <!-- In-Kind Donation -->
+    <!-- ============================= -->
+
+    {% if donation.donation_type == "IN_KIND" %}
+
+    <div class="card shadow mb-4">
+
+        <div class="card-header bg-info text-white">
+
+            <h5 class="mb-0">
+
+                <i class="bi bi-box-seam"></i>
+
+                In-Kind Donation Details
+
+            </h5>
+
+        </div>
+
+        <div class="card-body">
+
+            <table class="table table-bordered">
+
+                <tr>
+                    <th width="30%">Item Name</th>
+                    <td>{{ donation.item_name }}</td>
+                </tr>
+
+                <tr>
+                    <th>Category</th>
+                    <td>{{ donation.category }}</td>
+                </tr>
+
+                <tr>
+                    <th>Quantity</th>
+                    <td>{{ donation.quantity }}</td>
+                </tr>
+
+                <tr>
+                    <th>Estimated Value</th>
+                    <td>₹ {{ donation.estimated_value }}</td>
+                </tr>
+
+            </table>
+
+        </div>
+
+    </div>
+
+    {% endif %}
+
+
+    <!-- ============================= -->
+    <!-- Remarks -->
+    <!-- ============================= -->
+
+    <div class="card shadow mb-4">
+
+        <div class="card-header bg-secondary text-white">
+
+            <h5 class="mb-0">
+
+                <i class="bi bi-chat-left-text"></i>
+
+                Remarks
+
+            </h5>
+
+        </div>
+
+        <div class="card-body">
+
+            {% if donation.remarks %}
+
+                {{ donation.remarks }}
+
+            {% else %}
+
+                <span class="text-muted">
+
+                    No remarks available.
+
+                </span>
+
+            {% endif %}
+
+        </div>
+
+    </div>
+
+
+    <!-- ============================= -->
+    <!-- Buttons -->
+    <!-- ============================= -->
+
+    <div class="mb-5">
+
+        <a href="{{ url_for('donations.print_receipt',
+                            donation_id=donation.id) }}"
+           class="btn btn-success">
+
+            <i class="bi bi-printer"></i>
+
+            Print Receipt
+
+        </a>
+
+        <a href="{{ url_for('donations.edit_donation',
+                            donation_id=donation.id) }}"
+           class="btn btn-warning">
+
+            Edit
+
+        </a>
+
+        <form method="POST"
+              action="{{ url_for('donations.delete_donation',
+                                 donation_id=donation.id) }}"
+              class="d-inline">
+
+            <button class="btn btn-danger"
+                    onclick="return confirm('Delete this donation?')">
+
+                <i class="bi bi-trash"></i>
+
+                Delete
+
+            </button>
+
+        </form>
+
+        <a href="{{ url_for('donations.list_donations') }}"
+           class="btn btn-secondary">
+
+            Back
+
+        </a>
+
+    </div>
 
 </div>
 
